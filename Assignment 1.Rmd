@@ -1,0 +1,44 @@
+---
+title: "INF312 Assignment 1"
+author: "Cindy Ly"
+date: "31/01/2022"
+output: pdf_document
+abstract: ""
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(include = FALSE)
+library(knitr)
+
+install.packages("opendatatoronto")
+install.packages("dplyr")
+install.packages("tidyverse")
+install.packages("janitor")
+install.packages("tidyr")
+library(tidyverse)
+library(opendatatoronto)
+library(dplyr)
+library(janitor)
+library(tidyr)
+```
+
+## Introduction
+
+
+```{r Introduction}
+summary(cars)
+```
+
+## Data
+
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+## Discussion
+
+## Conclusion
+
+## References
+
