@@ -13,12 +13,11 @@ install.packages("opendatatoronto")
 install.packages("dplyr")
 install.packages("tidyverse")
 install.packages("janitor")
+```
+
+
+```{r setup, include=FALSE}
 install.packages("tidyr")
-library(tidyverse)
-library(opendatatoronto)
-library(dplyr)
-library(janitor)
-library(tidyr)
 ```
 
 ## 1. Introduction
@@ -38,6 +37,7 @@ library(opendatatoronto)
 library(dplyr)
 library(janitor)
 library(tidyverse)
+library(tidyr)
  
 ## Police Annual Statistics Report - Homicide dataset was used for this paper
 # get package from Toronto Open Data
@@ -73,22 +73,29 @@ homicide_data <- subset(cleaned_homicide, cleaned_homicide$occurrence_year > 201
 # lets create a table that includes homicide type and year
 tab1 <- table(homicide_data$occurrence_year, homicide_data$homicide_type)
 
-# lets create a table that looks at the total homicides each year
-tab2 <- table(homicide_data$occurrence_year)
+## now lets create a new column that will show us the total homicides that year
+
+# we need to turn this into a dataframe first
+tab1 <- as.data.frame.matrix(tab1) 
+
+# now we can create a new column that will show us the total per neighbourhood
+tab1 <-
+  tab1 |>
+  mutate(Total = Other + Shooting + Stabbing)
 ```
 
 #### 2.3. Homicide Types & Rates
 
 
-```{r table1, echo=FALSE}
+```{r table, echo=FALSE}
 
 # using knitr, we can make a nicer looking table for our markdown of homicide types
 kable1 <-
   knitr::kable(
   tab1,
   "pipe",
-  col.names = c("Other", "Shooting", "Stabbing"),
-  align = "lcr",
+  col.names = c("Other", "Shooting", "Stabbing", "Total"),
+  align = "lccr",
   caption = "Homicide Type Counts in Toronto from 2013 to 2020"
 )
 
@@ -104,7 +111,7 @@ graph1 <-
   geom_text(stat='count', aes(label=..count..), position = position_stack(vjust = 0.5)) +
   labs(title = "Annual Homicide Type Count in Toronto from 2013 to 2020", 
        x = "Year", 
-       y = "Count",
+       y = "Cases",
        fill = "Homicide Type") +
   theme(plot.title = element_text(hjust = 0.5)) +
   scale_fill_manual(values = c("#ffd675", "#4bc9a3", "#1c6fff"))
@@ -113,22 +120,35 @@ graph1 <-
 graph1
 ```
 
-```{r table2, echo=FALSE}
-# we can also make another graph of total homicides each year
-kable2 <- 
+#### 2.4. Neighbourhoods
+```{r neighbourhoods, include=FALSE}
+# lets look at the highest homicide count for the top 6 neighbourhoods
+
+# we need to create a table that counts homicide rate per year for each neighbourhood
+tab3 <- table(homicide_data$neighbourhood, homicide_data$occurrence_year)
+
+# we need to turn this into a dataframe for easier processing
+tab3 <- as.data.frame.matrix(tab3) 
+
+# now we can create a new column that will show us the total per neighbourhood
+tab3 <-
+  tab3 |>
+  mutate(count = `2013` + `2014` + `2015` + `2016` + `2017` + `2018` + `2019` + `2020`)
+```
+
+
+```{r neighbourhood table, echo=FALSE}
+kable3 <- 
   knitr::kable(
-  tab2,
+  head(tab3),
   "pipe",
-  col.names = c("Year", "Homicides"),
-  align = "lc",
+  col.names = c("2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"),
+  align = "lccccccr",
   caption = "Total Homicides in Toronto from 2013 to 2020"
 )
 
-kable2
+kable3
 ```
-
-#### 2.4. Spatial Data
-[Add map if dataset has appropriate information]
 
 ## 3. Discussion
 
