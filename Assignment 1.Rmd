@@ -1,15 +1,14 @@
 ---
-title: "[Add Title]"
+title: "[Insert Title Here]"
 author: "Cindy Ly"
 date: "31/01/2022"
 output: pdf_document
-abstract: "[Add Abstract]"
+abstract: "[Insert Here]"
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(include = FALSE)
-library(knitr)
-
+options(repos = list(CRAN="http://cran.rstudio.com/"))
+knitr::opts_chunk$set(echo = TRUE)
 install.packages("opendatatoronto")
 install.packages("dplyr")
 install.packages("tidyverse")
@@ -22,24 +21,27 @@ library(janitor)
 library(tidyr)
 ```
 
-## Introduction
+## 1. Introduction
 
 
-```{r Introduction}
-summary(cars)
+```{r introduction}
 ```
 
-## Data
+## 2. Data
 
 
-```{r Data, echo=FALSE}
+#### 2.1. Data Source & Implications
 
+
+```{r data cleanup, include=FALSE}
 library(opendatatoronto)
 library(dplyr)
+library(janitor)
+library(tidyverse)
  
-# get package
+## Police Annual Statistics Report - Homicide dataset was used for this paper
+# get package from Toronto Open Data
 package <- show_package("7d72bbbe-8adc-4b36-8ad1-5359f1c7a9cc")
-package
  
 # get all resources for this package
 resources <- list_package_resources("7d72bbbe-8adc-4b36-8ad1-5359f1c7a9cc")
@@ -49,18 +51,88 @@ datastore_resources <- filter(resources, tolower(format) %in% c('csv', 'geojson'
  
 # load the first datastore resource as a sample
 data <- filter(datastore_resources, row_number()==1) %>% get_resource()
-data
+
+# basic cleaning of homicide dataset from janitor package
+cleaned_homicide <-
+  clean_names(data)
 ```
 
-[Add]
-[Add Map if possible]
+#### 2.2. Methodology
 
 
-## Discussion
+```{r data, include=FALSE}
+
+## we want to look at the data from 2013-2020 and must select these rows
+
+# the occurrence_year data is an integer, so we must convert to numeric before filtering
+cleaned_homicide$occurrence_year <- as.numeric(cleaned_homicide$occurrence_year)
+
+# we can filter the years out and create a new data frame
+homicide_data <- subset(cleaned_homicide, cleaned_homicide$occurrence_year > 2012)
+
+# lets create a table that includes homicide type and year
+tab1 <- table(homicide_data$occurrence_year, homicide_data$homicide_type)
+
+# lets create a table that looks at the total homicides each year
+tab2 <- table(homicide_data$occurrence_year)
+```
+
+#### 2.3. Homicide Types & Rates
 
 
-## References
+```{r table1, echo=FALSE}
 
+# using knitr, we can make a nicer looking table for our markdown of homicide types
+kable1 <-
+  knitr::kable(
+  tab1,
+  "pipe",
+  col.names = c("Other", "Shooting", "Stabbing"),
+  align = "lcr",
+  caption = "Homicide Type Counts in Toronto from 2013 to 2020"
+)
 
-[Cite Toronto Open Data]
+kable1
+```
+
+```{r graph, echo=FALSE, fig.height=6, fig.width=10}
+
+graph1 <-
+  (homicide_data |> 
+  ggplot(mapping = aes(x = occurrence_year, fill = homicide_type)) +
+  geom_bar(width = 0.6) +
+  geom_text(stat='count', aes(label=..count..), position = position_stack(vjust = 0.5)) +
+  labs(title = "Annual Homicide Type Count in Toronto from 2013 to 2020", 
+       x = "Year", 
+       y = "Count",
+       fill = "Homicide Type") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  scale_fill_manual(values = c("#ffd675", "#4bc9a3", "#1c6fff"))
+)
+
+graph1
+```
+
+```{r table2, echo=FALSE}
+# we can also make another graph of total homicides each year
+kable2 <- 
+  knitr::kable(
+  tab2,
+  "pipe",
+  col.names = c("Year", "Homicides"),
+  align = "lc",
+  caption = "Total Homicides in Toronto from 2013 to 2020"
+)
+
+kable2
+```
+
+#### 2.4. Spatial Data
+[Add map if dataset has appropriate information]
+
+## 3. Discussion
+
+## 4. References
+
 [Cite R]
+[Cite Packages]
