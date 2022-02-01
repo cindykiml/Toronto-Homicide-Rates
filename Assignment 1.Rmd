@@ -1,9 +1,9 @@
 ---
-title: "INF312 Assignment 1"
+title: "[Add Title]"
 author: "Cindy Ly"
 date: "31/01/2022"
 output: pdf_document
-abstract: ""
+abstract: "[Add Abstract]"
 ---
 
 ```{r setup, include=FALSE}
@@ -32,13 +32,35 @@ summary(cars)
 ## Data
 
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+```{r Data, echo=FALSE}
+
+library(opendatatoronto)
+library(dplyr)
+ 
+# get package
+package <- show_package("7d72bbbe-8adc-4b36-8ad1-5359f1c7a9cc")
+package
+ 
+# get all resources for this package
+resources <- list_package_resources("7d72bbbe-8adc-4b36-8ad1-5359f1c7a9cc")
+ 
+# identify datastore resources; by default, Toronto Open Data sets datastore resource format to CSV for non-geospatial and GeoJSON for geospatial resources
+datastore_resources <- filter(resources, tolower(format) %in% c('csv', 'geojson'))
+ 
+# load the first datastore resource as a sample
+data <- filter(datastore_resources, row_number()==1) %>% get_resource()
+data
 ```
+
+[Add]
+[Add Map if possible]
+
 
 ## Discussion
 
-## Conclusion
 
 ## References
 
+
+[Cite Toronto Open Data]
+[Cite R]
