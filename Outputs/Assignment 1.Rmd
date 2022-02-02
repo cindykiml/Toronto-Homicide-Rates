@@ -1,5 +1,5 @@
 ---
-title: "[Insert Title Here]"
+title: "Homicide Rates in Understanding Toronto Neighbourhoods"
 author: "Cindy Ly"
 date: "31/01/2022"
 output: pdf_document
@@ -7,16 +7,12 @@ abstract: "[Insert Here]"
 ---
 
 ```{r setup, include=FALSE}
-options(repos = list(CRAN="http://cran.rstudio.com/"))
 knitr::opts_chunk$set(echo = TRUE)
+options(repos = list(CRAN="http://cran.rstudio.com/"))
 install.packages("opendatatoronto")
 install.packages("dplyr")
 install.packages("tidyverse")
 install.packages("janitor")
-```
-
-
-```{r setup, include=FALSE}
 install.packages("tidyr")
 ```
 
@@ -121,33 +117,69 @@ graph1
 ```
 
 #### 2.4. Neighbourhoods
-```{r neighbourhoods, include=FALSE}
-# lets look at the highest homicide count for the top 6 neighbourhoods
+```{r neighbourhood yearly, include=FALSE}
+# lets look at the highest homicide count for the top 6 neighbourhoods from 2013 to 2020
 
 # we need to create a table that counts homicide rate per year for each neighbourhood
-tab3 <- table(homicide_data$neighbourhood, homicide_data$occurrence_year)
+# note: we use the table() rather than count() because there are "character" classes and not "numeric"
+tab2 <- table(homicide_data$neighbourhood, homicide_data$occurrence_year)
 
 # we need to turn this into a dataframe for easier processing
-tab3 <- as.data.frame.matrix(tab3) 
+tab2 <- as.data.frame.matrix(tab2) 
 
 # now we can create a new column that will show us the total per neighbourhood
-tab3 <-
-  tab3 |>
-  mutate(count = `2013` + `2014` + `2015` + `2016` + `2017` + `2018` + `2019` + `2020`)
+tab2 <-
+  tab2 |>
+  mutate(Total = `2013` + `2014` + `2015` + `2016` + `2017` + `2018` + `2019` + `2020`)
+
+# now we can use sort to order counts from smallest to greatest
+sorted.tab2 <- tab2[order(as.numeric(tab2$Total)), ]
 ```
 
 
 ```{r neighbourhood table, echo=FALSE}
-kable3 <- 
+kable2 <- 
   knitr::kable(
-  head(tab3),
+  tail(sorted.tab2),
   "pipe",
-  col.names = c("2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"),
-  align = "lccccccr",
-  caption = "Total Homicides in Toronto from 2013 to 2020"
+  col.names = c("2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "Total"),
+  align = "lcccccccr",
+  caption = "Largest Homicide Counts in Toronto's Neighbourhoods from 2013 to 2020"
 )
 
-kable3
+kable2
+```
+
+```{r neighbourhood rates, include=FALSE}
+# now lets make a graph to show the total homicides between these years per neighbourhood
+homicide_data$occurrence_year<-as.numeric(homicide_data$occurrence_year)
+
+# lets start with a table 
+tab3 <-
+  count(homicide_data, neighbourhood)
+
+# lets order this table from smallest to greatest while making the 'n' column numeric
+sorted.tab3 <- tab3[order(as.numeric(tab3$n)), ]
+
+# now lets find the 6 largest values (the last six in this data frame)
+sorted.tab3 <- tail(sorted.tab3)
+```
+
+
+```{r neighbourhood graph, echo=FALSE}
+
+# we can now graph all of these values 
+graph2 <-
+  sorted.tab3 |> 
+    ggplot(mapping = aes(x = neighbourhood, y = n)) +
+    geom_bar(stat = "identity", width = 0.7) +
+    labs(title = "Neighbourhoods in Toronto with the Greatest Homicide Cases from 2013 to 2020", 
+        x = "Neighbourhood", 
+        y = "Cases") +
+    scale_x_discrete(labels = c("Waterfront Communities-The Island (77)" = "The Island", "West Humber-Clairville (1)" = "W. Humber Clairville", "Weston (113)" = "Weston", "Bay Street Corridor (76)" = "Bay St. Corridor", "Mount Olive-Silverstone-Jamestown (2)" = "Smithfield", "Moss Park (73)" = "Moss Park")) +
+    geom_text(aes(label = n), vjust = -0.4) +
+    theme_minimal()
+graph2
 ```
 
 ## 3. Discussion
