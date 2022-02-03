@@ -7,6 +7,9 @@ abstract: "[Insert Here]"
 bibliography: /Users/cindyly/inf312-assignment-1/Outputs/references.bib
 ---
 
+\tableofcontents
+\pagebreak
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 options(repos = list(CRAN="http://cran.rstudio.com/"))
@@ -27,7 +30,7 @@ install.packages("bibtex")
 ## 2. Data
 
 
-#### 2.1. Data Source & Implications
+### 2.1. Data Source & Implications
 
 
 ```{r data cleanup, include=FALSE}
@@ -55,7 +58,7 @@ cleaned_homicide <-
   clean_names(data)
 ```
 
-#### 2.2. Methodology
+### 2.2. Methodology
 
 
 ```{r data, include=FALSE}
@@ -82,7 +85,7 @@ tab1 <-
   mutate(Total = Other + Shooting + Stabbing)
 ```
 
-#### 2.3. Homicide Types & Rates
+### 2.3. Homicide Types & Rates
 
 
 ```{r table, echo=FALSE}
@@ -118,7 +121,7 @@ graph1 <-
 graph1
 ```
 
-#### 2.4. Neighbourhoods
+### 2.4. Neighbourhoods
 ```{r neighbourhood yearly, include=FALSE}
 # lets look at the highest homicide count for the top 6 neighbourhoods from 2013 to 2020
 
@@ -146,7 +149,7 @@ kable2 <-
   "pipe",
   col.names = c("2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "Total"),
   align = "lcccccccr",
-  caption = "Largest Homicide Counts in Toronto's Neighbourhoods from 2013 to 2020"
+  caption = "Greatest Homicide Counts in Toronto's Neighbourhoods from 2013 to 2020"
 )
 
 kable2
@@ -186,12 +189,9 @@ graph2
 
 ## 3. Discussion
 
-## 4. References
-
-```{r citations, echo=FALSE}
+```{r citations, include=FALSE}
 library(bibtex)
 knitr::write_bib(c('knitr', 'opendatatoronto', 'tidyverse', 'ggplot2', 'dplyr', 'janitor', 'tidyr', 'bibtex'), file = 'references.bib')
 ```
 
-
-[Cite R]
+# References
