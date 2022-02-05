@@ -1,10 +1,10 @@
 ---
-title: "Homicide Rates in Understanding Toronto Neighbourhoods"
+title: "Understanding Toronto and its Neighbourhoods Through Homicide Rates"
 author: "Cindy Ly"
 date: "31/01/2022"
 output: pdf_document
 abstract: "[Insert Here]"
-bibliography: /Users/cindyly/inf312-assignment-1/Outputs/references.bib
+bibliography: [references.bib, literature.bib]
 ---
 
 \tableofcontents
@@ -32,6 +32,13 @@ install.packages("bibtex")
 
 ### 2.1. Data Source & Implications
 
+The data used in this paper was taken from Toronto Open Data, a catalogue of datasets created by the City of Toronto to increase transparency and encourage data literacy. This open data allows communities to engage in political conversations and raise awareness to policymakers and other residents. The dataset I used was the Toronto Police's Annual Statistical Report on Homicides. The raw data includes homicides form 2004 to 2020 in each neighbourhood and includes homicide type. This includes shooting, stabbing, and other. The data also includes geo-spatial data that can be used to pin point specific homicide locations on a map. However, to protect the privacy of parties, the pin points are moved to the nearest intersection [@TorontoOpenData]. As a result, homicide numbers by division or neighbourhood may be inaccurate as the exact number of homicides within geographical boundaries are not reflected [@TorontoOpenData]. This means there is a possibility that this data could be biased depending on how much or little the Police offset case locations.
+
+There are ethical implications to consider with this data. There is some ambiguity on what is considered a homicide case. The Toronto Police Open Data Documentation says that offences include first degree murder, second degree murder, and manslaughter. It also states, "Deaths caused by criminal negligence, suicide, or accidental or justifiable homicide (i.e self-defence) are not included." [@TorontoOpenData]. Since this information was provided by Toronto Police Services, it is subject to extreme bias. As seen with recent protests demanding more accountability from Police institutions worldwide, there is a great lack of transparency when it comes to police brutality and racism within the force. Therefore, it is important to ask whether homicide at the hands of the police are considered in this dataset, or if they would rule cases as 'self-defence' and exclude it.
+
+Another factor that could influence the dataset is whether or not the courts have decided on a ruling for homicide cases. There are cases that could be ongoing or verdict-less. Therefore, the number of deaths from homicide could not be accurately represented per year if cases are still awaiting trial.
+
+### 2.2. Methodology
 
 ```{r data cleanup, include=FALSE}
 library(opendatatoronto)
@@ -57,8 +64,6 @@ data <- filter(datastore_resources, row_number()==1) %>% get_resource()
 cleaned_homicide <-
   clean_names(data)
 ```
-
-### 2.2. Methodology
 
 
 ```{r data, include=FALSE}
@@ -97,24 +102,24 @@ kable1 <-
   "pipe",
   col.names = c("Other", "Shooting", "Stabbing", "Total"),
   align = "lccr",
-  caption = "Homicide Type Counts in Toronto from 2013 to 2020"
+  caption = "Number of Homicides by Type in Toronto from 2013 to 2020"
 )
 
 kable1
 ```
 
-```{r graph, echo=FALSE, fig.height=6, fig.width=10}
+```{r graph, echo=FALSE}
 
 graph1 <-
   (homicide_data |> 
   ggplot(mapping = aes(x = occurrence_year, fill = homicide_type)) +
-  geom_bar(width = 0.6) +
+  geom_bar(width = 0.7) +
   geom_text(stat='count', aes(label=..count..), position = position_stack(vjust = 0.5)) +
   labs(title = "Annual Homicide Type Count in Toronto from 2013 to 2020", 
        x = "Year", 
        y = "Cases",
        fill = "Homicide Type") +
-  theme(plot.title = element_text(hjust = 0.5)) +
+  theme_minimal() +
   scale_fill_manual(values = c("#ffd675", "#4bc9a3", "#1c6fff"))
 )
 
@@ -171,19 +176,20 @@ sorted.tab3 <- tail(sorted.tab3)
 ```
 
 
-```{r neighbourhood graph, echo=FALSE}
+```{r neighbourhood graph, echo=FALSE, fig.height=6, fig.width=8}
 
 # we can now graph all of these values 
 graph2 <-
   sorted.tab3 |> 
     ggplot(mapping = aes(x = neighbourhood, y = n)) +
     geom_bar(stat = "identity", width = 0.7) +
-    labs(title = "Neighbourhoods in Toronto with the Greatest Homicide Cases from 2013 to 2020", 
+    labs(title = "Toronto Neighbourhoods with the Greatest Homicide Cases from 2013 to 2020", 
         x = "Neighbourhood", 
         y = "Cases") +
     scale_x_discrete(labels = c("Waterfront Communities-The Island (77)" = "The Island", "West Humber-Clairville (1)" = "W. Humber Clairville", "Weston (113)" = "Weston", "Bay Street Corridor (76)" = "Bay St. Corridor", "Mount Olive-Silverstone-Jamestown (2)" = "Smithfield", "Moss Park (73)" = "Moss Park")) +
     geom_text(aes(label = n), vjust = -0.4) +
     theme_minimal()
+
 graph2
 ```
 
@@ -191,7 +197,13 @@ graph2
 
 ```{r citations, include=FALSE}
 library(bibtex)
+
 knitr::write_bib(c('knitr', 'opendatatoronto', 'tidyverse', 'ggplot2', 'dplyr', 'janitor', 'tidyr', 'bibtex'), file = 'references.bib')
+
+Rcite = citation()
+Rcite$key = "R"
+bibtex::write.bib(Rcite, 'references.bib', append = TRUE)
+ 
 ```
 
 # References

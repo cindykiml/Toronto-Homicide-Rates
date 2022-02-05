@@ -76,13 +76,13 @@ kable1
 graph1 <-
   (homicide_data |> 
      ggplot(mapping = aes(x = occurrence_year, fill = homicide_type)) +
-     geom_bar(width = 0.6) +
+     geom_bar(width = 0.7) +
      geom_text(stat='count', aes(label=..count..), position = position_stack(vjust = 0.5)) +
      labs(title = "Annual Homicide Type Count in Toronto from 2013 to 2020", 
           x = "Year", 
           y = "Cases",
           fill = "Homicide Type") +
-     theme(plot.title = element_text(hjust = 0.5)) +
+     theme_minimal() +
      scale_fill_manual(values = c("#ffd675", "#4bc9a3", "#1c6fff"))
   )
 
@@ -134,12 +134,13 @@ graph2 <-
   sorted.tab3 |> 
   ggplot(mapping = aes(x = neighbourhood, y = n)) +
   geom_bar(stat = "identity", width = 0.7) +
-  labs(title = "Neighbourhoods in Toronto with the Greatest Homicide Cases from 2013 to 2020", 
+  labs(title = "Toronto Neighbourhoods with the Greatest Homicide Cases from 2013 to 2020", 
        x = "Neighbourhood", 
        y = "Cases") +
   scale_x_discrete(labels = c("Waterfront Communities-The Island (77)" = "The Island", "West Humber-Clairville (1)" = "W. Humber Clairville", "Weston (113)" = "Weston", "Bay Street Corridor (76)" = "Bay St. Corridor", "Mount Olive-Silverstone-Jamestown (2)" = "Smithfield", "Moss Park (73)" = "Moss Park")) +
   geom_text(aes(label = n), vjust = -0.4) +
   theme_minimal()
+
 graph2
 
 #### bibliography file
