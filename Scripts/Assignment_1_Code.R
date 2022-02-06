@@ -1,5 +1,5 @@
 ## This is an R script for Assignment-1 Markdown
-## Title: "Homicide Rates in Understanding Toronto Neighbourhoods"
+## Title: "Understanding Toronto's Homicide Rates Through its Marginalized Neighbourhoods"
 ## Author: Cindy Ly
 
 knitr::opts_chunk$set(echo = TRUE)
