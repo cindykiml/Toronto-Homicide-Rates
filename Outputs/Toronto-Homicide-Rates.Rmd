@@ -5,7 +5,6 @@ author: "Cindy Ly"
 date: "`r format(Sys.time(), '%d %B %Y')`"
 output: 
   bookdown::pdf_document2:
-    extra_dependencies: ["float"]
 thanks: "Code and data are available at: https://github.com/cindykiml/Toronto-Homicide-Rates"
 abstract: "This paper looks at Toronto’s homicide rates in order to determine a trend with violence and gun usage from 2013 to 2020. It will also determine which neighbourhoods have the highest murder rates. Findings indicate that the increase in violence disproportionately affects low-income neighbourhoods. Through literature references, this paper will also shed light on how homicide, gun violence, and neighbourhood makeup are correlated and play a role in systemic oppression."
 bibliography: [references.bib, literature.bib]
@@ -26,11 +25,11 @@ install.packages("bibtex")
 
 # Introduction
 
-Canada’s gun laws are strict and is federally controlled as owners requiring a permit to bear arms. Yet, homicide rates have been increasing in Toronto with shootings and gun violence as its leading cause [@open]. As a result, many Torontonians are becoming increasingly worried, especially after a record breaking number of 97 homicides in 2018 [@global]. Police Chief Mark Saunders believes that the spike in gun violence is attributed to the increase of street gang activity [@global]. Furthermore, he also believes that the growth in gang activity is due to increasing economic disparity [@npr]. Research has shown that most of Toronto’s gang activity is located in its lower income neighbourhoods [@npr].
+Canada’s gun laws are strict and is federally controlled as owners require a permit to bear arms. Yet, homicide rates have been increasing in Toronto with shootings and gun violence as its leading cause [@open]. As a result, many Torontonians are becoming increasingly worried, especially after a record breaking number of 97 homicides in 2018 [@global]. Police Chief Mark Saunders believes that the spike in gun violence is attributed to the increase of street gang activity [@global]. Furthermore, he also believes that the growth in gang activity is due to increasing wealth gap [@npr]. Research has shown that most of Toronto’s gang activity is located in its lower income neighbourhoods [@npr].
 
 University of Toronto professor, David Hulchanski conducted research on *The Three Cities Within Toronto* (2010). These three cities include high-income, middle-income, and low-income neighbourhoods. His team looked at 35 years worth of data to see long term income polarization trends within the city. The results show that economic disparity has increased at an alarming rate. Toronto’s middle class has shrunk from 66% of the city in 1971 to 29% in 2005 [@hulchanski]. Hulchanski’s research looked at more than income; he also gathered information on neighbourhood attributes such as, visible minority make up, education, and crime [@hulchanski]. Using Hulchanski’s cross-sectional census research, I will be using it as a key literature piece to further understand Toronto’s homicide rates and how it affects the city’s most vulnerable.
 
-In this paper, I use Toronto's open data catalogue to find information on homicide rates. I discuss the data source and implications the dataset may have considering it was created by Toronto Police Services. My goal is to explore the correlation between homicides, gun violence, and neighbourhood make up. I use homicide rates to look at the overall trend in murders and gun usage from 2013 to 2020. After, I will determine which neighbourhood has the highest homicide rates and look at the common themes these neighbourhoods share. In addition, I will see if my findings are consistent with Hulchanski’s research.
+In this paper, I use Toronto's open data catalogue to find information on homicide rates. I discuss the data source and implications the dataset may have considering it was created by Toronto Police Services. My goal is to analyze the correlation between homicides, gun violence, and neighbourhood make up. I use homicide rates to look at the overall trend in murders and gun usage from 2013 to 2020. After, I will determine which neighbourhood has the highest homicide rates and look at the common themes these neighbourhoods share. In addition, I will see if my findings are consistent with Hulchanski’s research.
 
 ```{r introduction}
 ```
@@ -40,18 +39,20 @@ In this paper, I use Toronto's open data catalogue to find information on homici
 
 ## Data Source & Implications
 
-The data used in this paper was taken from Toronto Open Data, a catalogue of datasets created by the City of Toronto to increase transparency and encourage data literacy [@R-opendatatoronto]. This open data allows communities to engage in political conversations and raise awareness to policymakers and other citizens. The dataset I used was the Toronto Police's Annual Statistical Report on Homicides. The raw data includes homicide count from 2004 to 2020 for each neighbourhood and includes homicide type. This includes ‘shooting’, ‘stabbing’, and ‘other’. The data also includes geo-spatial information that can be used to pin point specific homicide locations on a map. However, to protect the privacy of parties, the pin points are moved to the nearest intersection [@open]. As a result, homicide numbers by division or neighbourhood may be inaccurate as the exact number of homicides within geographical boundaries are not reflected [@open]. This means there is a possibility that this data could be biased depending on how much or little the police offset locations.
+The data used in this paper was taken from Toronto Open Data, a catalogue of datasets created by the City of Toronto to increase transparency and encourage data literacy [@R-opendatatoronto]. This open data allows communities to engage in political conversations and raise awareness for policymakers and other citizens. The dataset I used was the Toronto Police's Annual Statistical Report on Homicides. The raw data includes homicide count from 2004 to 2020 for each neighbourhood and includes homicide type. This includes ‘shooting’, ‘stabbing’, and ‘other’. The data also includes geo-spatial information that can be used to pin point specific homicide locations on a map. However, to protect the privacy of parties, the pin points are moved to the nearest intersection [@open]. As a result, homicide numbers by division or neighbourhood may be inaccurate as the exact number of homicides within geographical boundaries are not reflected [@open]. This means there is a possibility that this data could be biased depending on how much or little the police offset locations.
 
-There are ethical implications to consider with this data. There is some ambiguity on what is considered a homicide case. The Toronto Police Open Data Documentation says that offences include first degree murder, second degree murder, and manslaughter [@tps]. It also states, "Deaths caused by criminal negligence, suicide, or accidental or justifiable homicide (i.e self-defense) are not included." [@tps]. It is difficult to determine 'justifiable' homicide as there are many factors to consider and it is based on court ruling. 
+There are ethical implications to consider with this data. There is some ambiguity on what is considered a homicide case. The Toronto Police Open Data Documentation says that offences include first degree murder, second degree murder, and manslaughter [@tps]. It also states, "Deaths caused by criminal negligence, suicide, or accidental or justifiable homicide (i.e self-defense) are not included." [@tps]. It is difficult to determine 'justifiable' homicide as this is an issue of morality and ethics which can be completely subjective. 
 
 Additionally, because this information was provided by Toronto Police Services, it is subject to immense ethical violations. As seen with recent protests demanding more accountability from police institutions worldwide, there is a great lack of transparency when it comes to police brutality and racism within the force. Therefore, it is important to question whether homicide at the hands of the police are considered in this dataset, or if they would rule such cases as 'self-defense' and exclude it.
 
-Another factor that could influence the dataset is whether or not the courts have decided on a ruling for homicide cases. There are cases that could be ongoing or verdict-less. Therefore, the number of deaths from homicide could not be accurately represented per year if cases are still awaiting trial.
+Another factor that could influence the dataset is whether or not the courts have decided on a ruling for homicide cases. There are cases that could be ongoing or verdict-less. Therefore, the number of deaths from homicide for that year may not be accurately represented if cases are still awaiting trial.
 
 
 ## Methodology
 
-The materials used in this paper is `R` [@R], `knitr` [@R-knitr], `Open Data Toronto` [@R-opendatatoronto], `tidyverse` [@R-tidyverse], `ggplot2` [@R-ggplot2], `dplyr` [@R-dplyr], `janitor` [@R-janitor], and `bibtex` [@R-bibtex]. I began by downloading the data from Open Data Toronto, then cleaning and extracting it. I wanted to look at data from the most recent years so I filtered the data to only show cases from 2013 to 2020. My plan was to analyze Toronto homicides by each type first, then look at which neighbourhoods had the highest rates. First, I created a table that focused on the types of homicides in Toronto and the total count throughout the years. Since the raw data did not include a total number per year, I added a new column that contained the sum of shooting, stabbing, and other homicides (Table \@ref(tab:table)). I plotted this onto a stacked bar graph to visualize the changes over the years and see which type had the highest frequency (Figure \@ref(fig:typerate)). After, I extracted a new data frame with the number of homicides from 2013 to 2020 for each Toronto neighbourhood. I created a new ‘Total’ column which contained the sum of deaths for each neighbourhood. Then, I ordered the 'Total' column from smallest to greatest and found the six neighbourhoods with the highest counts. Next, I formatted this into a table and graph to visually show the top six neighbourhoods with the highest number of homicides over the eight years (Table \@ref(tab:table2))(Figure \@ref(fig:neigh)).
+The materials used in this paper is `R` [@R], `knitr` [@R-knitr], `Open Data Toronto` [@R-opendatatoronto], `tidyverse` [@R-tidyverse], `ggplot2` [@R-ggplot2], `dplyr` [@R-dplyr], `janitor` [@R-janitor], and `bibtex` [@R-bibtex]. I began by downloading the data from Open Data Toronto, then cleaning and extracting it. I wanted to look at data from the most recent years so I filtered the data to only show cases from 2013 to 2020. My plan was to analyze Toronto homicides by each type first, then look at which neighbourhoods had the highest rates. 
+
+First, I created a table that focused on the types of homicides in Toronto and the total count throughout the years. Since the raw data did not include a total number per year, I added a new column that contained the sum of shooting, stabbing, and other homicides (Table \@ref(tab:table)). I plotted this onto a stacked bar graph to visualize the changes over the years and see which type had the highest frequency (Figure \@ref(fig:typerate)). After, I extracted a new data frame with the number of homicides from 2013 to 2020 for each Toronto neighbourhood. I created a new ‘Total’ column which contained the sum of deaths for each neighbourhood. Then, I ordered the 'Total' column from smallest to greatest and found the six neighbourhoods with the highest counts. I formatted this into a table and graph to visually show the top six neighbourhoods with the highest number of homicides over eight years (Table \@ref(tab:table2))(Figure \@ref(fig:neigh)).
 
 ```{r data cleanup, include=FALSE}
 library(opendatatoronto)
@@ -70,7 +71,7 @@ cleaned_homicide <-
 
 ```{r data, include=FALSE}
 
-## we want to look at the data from 2013-2020 and must select these rows
+# we want to look at the data from 2013-2020 and must select these rows
 
 # the occurrence_year data is an integer, so we must convert to numeric before filtering
 cleaned_homicide$occurrence_year <- as.numeric(cleaned_homicide$occurrence_year)
@@ -83,7 +84,7 @@ tab1 <- table(homicide_data$occurrence_year, homicide_data$homicide_type)
 
 ## now lets create a new column that will show us the total homicides that year
 
-# we need to turn this into a dataframe first
+# we need to turn this into a dataframe first in order to use mutate()
 tab1 <- as.data.frame.matrix(tab1) 
 
 # now we can create a new column that will show us the total per neighbourhood
@@ -109,7 +110,7 @@ kable1 <-
 kable1
 ```
 
-```{r typerate, fig.cap="Homicide type cases in Toronto per year", echo=FALSE}
+```{r typerate, fig.cap="Homicide cases incuding type in Toronto per year", echo=FALSE}
 
 graph1 <-
   (homicide_data |> 
@@ -137,10 +138,10 @@ Starting from 2013, the number of homicides steadily increase with a spike in 20
 # lets look at the highest homicide count for the top 6 neighbourhoods from 2013 to 2020
 
 # we need to create a table that counts homicide rate per year for each neighbourhood
-# note: we use the table() rather than count() because there are "character" classes and not "numeric"
+# note: we use table() rather than count() because they are "character" classes and not "numeric"
 tab2 <- table(homicide_data$neighbourhood, homicide_data$occurrence_year)
 
-# we need to turn this into a dataframe for easier processing
+# we need to turn this into a dataframe for processing
 tab2 <- as.data.frame.matrix(tab2) 
 
 # now we can create a new column that will show us the total per neighbourhood
@@ -174,15 +175,15 @@ homicide_data$occurrence_year<-as.numeric(homicide_data$occurrence_year)
 tab3 <-
   count(homicide_data, neighbourhood)
 
-# lets order this table from smallest to greatest while making the 'n' column numeric
+# lets order this table from smallest to greatest while making the 'n' column a numeric class
 sorted.tab3 <- tab3[order(as.numeric(tab3$n)), ]
 
-# now lets find the 6 largest values (the last six in this data frame)
+# now lets find the 6 largest values (aka the last six in this data frame)
 sorted.tab3 <- tail(sorted.tab3)
 ```
 
 
-```{r neigh, fig.cap="Top six beighbourhoods with the largest culmulative homicide cases", echo=FALSE, fig.height=6, fig.width=8}
+```{r neigh, fig.cap="Top six neighbourhoods with the largest culmulative homicide cases", echo=FALSE, fig.height=6, fig.width=8}
 
 # we can now graph all of these values 
 graph2 <-
@@ -207,7 +208,7 @@ The top six neighbourhoods with the highest homicide counts are *Bay St. Corrido
 
 As seen in Figure \@ref(fig:typerate), in recent years, homicides due to gun violence is greater than ‘other’ and ‘shooting’ combined. Therefore, it is within reason to assume that this trend will only continue into the future. According to an article by the National Post, a large contributing factor is due to “gun culture” from the United States [@humphreys]. As a result, more guns are being smuggled across the border with an alarming statistic of 80% of guns being traced back to the United States [@humphreys].
 
-In a 2019 press conference, Police Chief Saunders stated, “the city’s recent gun violence has been connected to gang activity” [@npr]. A significant amount of Toronto shootings has been due to gang culture which centers on illegal drug trade [@npr]. It is important to note that this activity usually takes place in the city’s poorest neighbourhoods. Many officials believe that the increasing economic inequality is fueling the rise in gang activity [@npr]. The cost of living in Toronto has grown dramatically, making it difficult for residents to make ends meet. This is consistent with my findings as four out of six neighbourhoods with the highest homicide rates are located in Toronto’s poorest areas (See sub-section \@ref(sec:neighbourhoods)). Moss Park, Smithfield, West Humber Clairville and Weston are classified as low-income neighbourhoods [@hulchanski]. As for the remaining two, there is no income information for The Island, and Bay Street Corridor is the core of Downtown Toronto, where it is the most dense and busy which can explain why homicide rates are so high. Gun violence will only continue to increase unless we address the connecting social issues. As Hulchanski predicts, low-income neighbourhoods will increase to 60% of Toronto’s makeup by 2025 which will contribute even further to violence within the city [@hulchanski].
+In a 2019 press conference, Police Chief Saunders stated, “the city’s recent gun violence has been connected to gang activity” [@npr]. A significant amount of Toronto shootings has been due to gang culture which centers on illegal drug trade [@npr]. It is important to note that this activity usually takes place in the city’s poorest neighbourhoods. Many officials believe that the increasing economic inequality is fueling the rise in gang activity [@npr]. The cost of living in Toronto has grown dramatically, making it difficult for residents to make ends meet. This is consistent with my findings as four out of six neighbourhoods with the highest homicide rates are located in Toronto’s poorest areas (See sub-section \@ref(sec:neighbourhoods)). Moss Park, Smithfield, West Humber Clairville and Weston are classified as low-income neighbourhoods [@hulchanski]. As for the remaining two, there is no income information for The Island, and Bay Street Corridor is the core of Downtown Toronto, where it is the most dense and busy which can explain why homicide rates are high. Gun violence will only continue to increase unless we address the connecting social issues. As Hulchanski predicts, low-income neighbourhoods will increase to 60% of Toronto’s makeup by 2025 which will contribute even further to violence within the city [@hulchanski].
 
 ## Marginalized Neighbourhoods
 
@@ -224,8 +225,10 @@ Urban crime does not exist in a vacuum, there are a multitude of factors that ar
 ```{r citations, include=FALSE}
 library(bibtex)
 
+# creating a references bib file
 knitr::write_bib(c('knitr', 'opendatatoronto', 'tidyverse', 'ggplot2', 'dplyr', 'janitor', 'tidyr', 'bibtex'), file = 'references.bib')
 
+# adding R as a reference to the file 
 Rcite = citation()
 Rcite$key = "R"
 bibtex::write.bib(Rcite, 'references.bib', append = TRUE)
