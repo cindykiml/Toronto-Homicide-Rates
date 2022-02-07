@@ -1,4 +1,6 @@
-## Police Annual Statistics Report - Homicide dataset was used for this paper
+## Name: Cindy Ly
+## Date: February 6th, 2022
+## Purpose: This script downloads Police Annual Statistics Report - Homicide from Toronto Open Data
 
 install.packages("opendatatoronto")
 install.packages("janitor")
