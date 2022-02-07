@@ -21,6 +21,7 @@ install.packages("tidyverse")
 install.packages("janitor")
 install.packages("tidyr")
 install.packages("bibtex")
+install.packages("here")
 ```
 
 # Introduction
@@ -50,7 +51,7 @@ Another factor that could influence the dataset is whether or not the courts hav
 
 ## Methodology
 
-The materials used in this paper is `R` [@R], `knitr` [@R-knitr], `Open Data Toronto` [@R-opendatatoronto], `tidyverse` [@R-tidyverse], `ggplot2` [@R-ggplot2], `dplyr` [@R-dplyr], `janitor` [@R-janitor], and `bibtex` [@R-bibtex]. I began by downloading the data from Open Data Toronto, then cleaning and extracting it. I wanted to look at data from the most recent years so I filtered the data to only show cases from 2013 to 2020. My plan was to analyze Toronto homicides by each type first, then look at which neighbourhoods had the highest rates. 
+The materials used in this paper is `R` [@R], `knitr` [@R-knitr], `Open Data Toronto` [@R-opendatatoronto], `tidyverse` [@R-tidyverse], `ggplot2` [@R-ggplot2], `dplyr` [@R-dplyr], `janitor` [@R-janitor], `bibtex` [@R-bibtex], and `here` [@R-here]. I began by downloading the data from Open Data Toronto, then cleaning and extracting it. I wanted to look at data from the most recent years so I filtered the data to only show cases from 2013 to 2020. My plan was to analyze Toronto homicides by each type first, then look at which neighbourhoods had the highest rates. 
 
 First, I created a table that focused on the types of homicides in Toronto and the total count throughout the years. Since the raw data did not include a total number per year, I added a new column that contained the sum of shooting, stabbing, and other homicides (Table \@ref(tab:table)). I plotted this onto a stacked bar graph to visualize the changes over the years and see which type had the highest frequency (Figure \@ref(fig:typerate)). After, I extracted a new data frame with the number of homicides from 2013 to 2020 for each Toronto neighbourhood. I created a new ‘Total’ column which contained the sum of deaths for each neighbourhood. Then, I ordered the 'Total' column from smallest to greatest and found the six neighbourhoods with the highest counts. I formatted this into a table and graph to visually show the top six neighbourhoods with the highest number of homicides over eight years (Table \@ref(tab:table2))(Figure \@ref(fig:neigh)).
 
@@ -60,8 +61,9 @@ library(dplyr)
 library(janitor)
 library(tidyverse)
 library(tidyr)
+library(here)
 
-raw_data <- read_csv(file = '/Users/cindyly/Toronto-Homicide-Rates/Inputs/data/raw_data.csv')
+raw_data <- read_csv(here("Inputs", "data", "raw_data.csv"))
 
 # basic cleaning of homicide dataset from janitor package
 cleaned_homicide <-
@@ -226,7 +228,7 @@ Urban crime does not exist in a vacuum, there are a multitude of factors that ar
 library(bibtex)
 
 # creating a references bib file
-knitr::write_bib(c('knitr', 'opendatatoronto', 'tidyverse', 'ggplot2', 'dplyr', 'janitor', 'tidyr', 'bibtex'), file = 'references.bib')
+knitr::write_bib(c('knitr', 'opendatatoronto', 'tidyverse', 'ggplot2', 'dplyr', 'janitor', 'tidyr', 'bibtex', 'here'), file = 'references.bib')
 
 # adding R as a reference to the file 
 Rcite = citation()

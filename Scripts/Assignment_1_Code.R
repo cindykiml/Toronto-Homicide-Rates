@@ -1,6 +1,6 @@
-## This is an R script for Assignment-1 Markdown
 ## Title: "Understanding Toronto's Homicide Rates Through its Marginalized Neighbourhoods"
 ## Author: Cindy Ly
+## Purpose: This is an R script for Assignment-1 Markdown
 
 knitr::opts_chunk$set(echo = TRUE)
 
@@ -12,6 +12,7 @@ install.packages("tidyverse")
 install.packages("janitor")
 install.packages("tidyr")
 install.packages("bibtex")
+install.packages("here")
 
 ## Load libraries
 library(opendatatoronto)
@@ -20,24 +21,14 @@ library(janitor)
 library(tidyverse)
 library(tidyr)
 library(bibtex)
+library(here)
 
-#### Get Police Annual Statistics Report - Homicide dataset was used for this paper
-
-# get package from Toronto Open Data
-package <- show_package("7d72bbbe-8adc-4b36-8ad1-5359f1c7a9cc")
-
-# get all resources for this package
-resources <- list_package_resources("7d72bbbe-8adc-4b36-8ad1-5359f1c7a9cc")
-
-# identify datastore resources; by default, Toronto Open Data sets datastore resource format to CSV for non-geospatial and GeoJSON for geospatial resources
-datastore_resources <- filter(resources, tolower(format) %in% c('csv', 'geojson'))
-
-# load the first datastore resource as a sample
-data <- filter(datastore_resources, row_number()==1) %>% get_resource()
+# get our raw data from out inputs folder
+raw_data <- read_csv(here("Inputs", "data", "raw_data.csv"))
 
 # basic cleaning of homicide dataset from janitor package
 cleaned_homicide <-
-  clean_names(data)
+  clean_names(raw_data)
 
 #### we want to look at the data from 2013-2020 and must select these rows
 
@@ -50,9 +41,9 @@ homicide_data <- subset(cleaned_homicide, cleaned_homicide$occurrence_year > 201
 # lets create a table that includes homicide type and year
 tab1 <- table(homicide_data$occurrence_year, homicide_data$homicide_type)
 
-#### now lets create a new column that will show us the total homicides that year
+## now lets create a new column that will show us the total homicides that year
 
-# we need to turn this into a dataframe first
+# we need to turn this into a dataframe first in order to use mutate()
 tab1 <- as.data.frame.matrix(tab1) 
 
 # now we can create a new column that will show us the total per neighbourhood
@@ -68,7 +59,7 @@ kable1 <-
     "pipe",
     col.names = c("Other", "Shooting", "Stabbing", "Total"),
     align = "lccr",
-    caption = "Homicide Type Counts in Toronto from 2013 to 2020"
+    caption = "Number of Homicides by Type in Toronto from 2013 to 2020"
   )
 kable1
 
@@ -78,20 +69,19 @@ graph1 <-
      ggplot(mapping = aes(x = occurrence_year, fill = homicide_type)) +
      geom_bar(width = 0.7) +
      geom_text(stat='count', aes(label=..count..), position = position_stack(vjust = 0.5)) +
-     labs(title = "Annual Homicide Type Count in Toronto from 2013 to 2020", 
+     labs(title = "Homicide Rates in Toronto from 2013 to 2020", 
           x = "Year", 
           y = "Cases",
           fill = "Homicide Type") +
      theme_minimal() +
      scale_fill_manual(values = c("#ffd675", "#4bc9a3", "#1c6fff"))
   )
-
 graph1
 
 #### lets look at the highest homicide count for the top 6 neighbourhoods from 2013 to 2020
 
 # we need to create a table that counts homicide rate per year for each neighbourhood
-# note: we use the table() rather than count() because there are "character" classes and not "numeric"
+# note: we use table() rather than count() because they are "character" classes and not "numeric"
 tab2 <- table(homicide_data$neighbourhood, homicide_data$occurrence_year)
 
 # we need to turn this into a dataframe for processing
@@ -102,7 +92,7 @@ tab2 <-
   tab2 |>
   mutate(Total = `2013` + `2014` + `2015` + `2016` + `2017` + `2018` + `2019` + `2020`)
 
-# now we can use sort to order counts from smallest to greatest
+# now we can use order counts from smallest to greatest
 sorted.tab2 <- tab2[order(as.numeric(tab2$Total)), ]
 
 ## table 2 - the greatest homicide counts in Toronto neighbourhoods (top 6)
@@ -116,33 +106,37 @@ kable2 <-
   )
 kable2
 
-## now lets make a graph to show the total homicides between these years per neighbourhood
+# now lets make a graph to show the total homicides between these years per neighbourhood
 homicide_data$occurrence_year<-as.numeric(homicide_data$occurrence_year)
 
 # lets start with a table 
 tab3 <-
   count(homicide_data, neighbourhood)
 
-# lets order this table from smallest to greatest while making the 'n' column numeric
+# lets order this table from smallest to greatest while making the 'n' column a numeric class
 sorted.tab3 <- tab3[order(as.numeric(tab3$n)), ]
 
-# now lets find the 6 largest values (the last six in this data frame)
+# now lets find the 6 largest values (aka the last six in this data frame)
 sorted.tab3 <- tail(sorted.tab3)
 
 # we can now graph all of these values 
 graph2 <-
   sorted.tab3 |> 
   ggplot(mapping = aes(x = neighbourhood, y = n)) +
-  geom_bar(stat = "identity", width = 0.7) +
-  labs(title = "Toronto Neighbourhoods with the Greatest Homicide Cases from 2013 to 2020", 
+  geom_bar(stat = "identity", width = 0.6) +
+  labs(title = "Greatest Homicide Cases by Toronto Neighbourhood from 2013 to 2020", 
        x = "Neighbourhood", 
        y = "Cases") +
   scale_x_discrete(labels = c("Waterfront Communities-The Island (77)" = "The Island", "West Humber-Clairville (1)" = "W. Humber Clairville", "Weston (113)" = "Weston", "Bay Street Corridor (76)" = "Bay St. Corridor", "Mount Olive-Silverstone-Jamestown (2)" = "Smithfield", "Moss Park (73)" = "Moss Park")) +
   geom_text(aes(label = n), vjust = -0.4) +
   theme_minimal()
-
 graph2
 
-#### bibliography file
+#### create a bibliography file
 library(bibtex)
-knitr::write_bib(c('knitr', 'opendatatoronto', 'tidyverse', 'ggplot2', 'dplyr', 'janitor', 'tidyr', 'bibtex'), file = 'references.bib')
+knitr::write_bib(c('knitr', 'opendatatoronto', 'tidyverse', 'ggplot2', 'dplyr', 'janitor', 'tidyr', 'bibtex', 'here'), file = 'references.bib')
+
+# adding R as a reference to the file 
+Rcite = citation()
+Rcite$key = "R"
+bibtex::write.bib(Rcite, 'references.bib', append = TRUE)
